@@ -5,8 +5,8 @@ defaults:
 
 model:
   _name_: dna_embedding
-  d_model: 256
-  n_layer: 4
+  d_model: 128
+  n_layer: 2
   d_inner: ${eval:4 * ${.d_model}}
   vocab_size: 12
   resid_dropout: 0.0
@@ -20,7 +20,7 @@ model:
     emb_dim: 5
     filter_order: 64
     short_filter_order: 3
-    l_max: 32770  # required to be set the same as the pretrained model if using, don't forget the +2!  ${eval:${dataset.max_length}+2}
+    l_max: 6402  # required to be set the same as the pretrained model if using, don't forget the +2!  ${eval:${dataset.max_length}+2}
     modulate: True
     w: 10
     lr: ${optimizer.lr}
@@ -47,7 +47,7 @@ trainer:
 
 dataset:
   # batch_size: 32  # Per GPU
-  batch_size: 16
+  batch_size: 128
   max_length: 3200 # 262144, 524288
   # optional, default is max_length
   # max_length_val: ${dataset.max_length}
@@ -74,7 +74,7 @@ train:
   remove_test_loader_in_eval: true  # no test set in this benchmark
   pretrained_model_strict_load: False  # false allows encoder/decoder to be used if new model uses it
   # for loading backbone and not head, requires both of these flags below
-  pretrained_model_path: null
+  pretrained_model_path: "/home/hfeng031/repos/hyena-dna/models/tomato/pt_tomato.ckpt"
   pretrained_model_state_hook:
     _name_: load_backbone
     freeze_backbone: false  # seems to work much better if false (ie finetune entire model)
