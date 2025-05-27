@@ -2,6 +2,8 @@
 
 Original HyenaDNA repo with installation info here: https://github.com/HazyResearch/hyena-dna
 
+HyenaDNA with code and config for methylation prediction.
+
 Pretraining:
 ```
 python -m train wandb=null experiment=plants_genomic dataset=plants_genomic dataset.max_length=6400 dataset.csv_file=/path/to/dataset.csv
