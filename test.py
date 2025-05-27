@@ -15,7 +15,7 @@ from omegaconf import DictConfig,OmegaConf
 import src.utils as utils
 from huggingface_norun import HyenaDNAPreTrainedModel
 from train import SequenceLightningModule,create_trainer
-from src.dataloaders.datasets.amps_dataset import AMPSDataset
+from src.dataloaders.datasets.methyl_dataset import MethylDataset
 from src.dataloaders.datasets.hg38_char_tokenizer import CharacterTokenizer
 
 def train_loop(model,device,train_loader,optimizer,epoch,loss_fn,log_interval=10):
@@ -76,13 +76,13 @@ def train_hf():
             add_special_tokens=False
         )
 
-    ds_train = AMPSDataset(
+    ds_train = MethylDataset(
             train_file,
             max_sequence_length=max_length,
             tokenizer=tokenizer
         )
 
-    ds_test = AMPSDataset(
+    ds_test = MethylDataset(
             test_file,
             max_sequence_length=max_length,
             tokenizer=tokenizer
@@ -137,7 +137,7 @@ def inference(config):
             add_special_tokens=False
         )
 
-    ds_test = AMPSDataset(
+    ds_test = MethylDataset(
             test_file,
             max_sequence_length=max_length,
             tokenizer=tokenizer
@@ -181,7 +181,7 @@ def inference_hf():
             add_special_tokens=False
         )
 
-    ds_test = AMPSDataset(
+    ds_test = MethylDataset(
             test_file,
             max_sequence_length=max_length,
             tokenizer=tokenizer

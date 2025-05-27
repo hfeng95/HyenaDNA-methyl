@@ -18,8 +18,8 @@ from src.dataloaders.datasets.chromatin_profile_dataset import ChromatinProfileD
 from src.dataloaders.datasets.species_dataset import SpeciesDataset
 from src.dataloaders.datasets.icl_genomics_dataset import ICLGenomicsDataset
 from src.dataloaders.datasets.hg38_fixed_dataset import HG38FixedDataset
-from src.dataloaders.datasets.amps_dataset import AMPSDataset
-from src.dataloaders.datasets.veggies_dataset import VeggiesDataset
+from src.dataloaders.datasets.methyl_dataset import MethylDataset
+from src.dataloaders.datasets.plants_genomic_dataset import PlantsGenomicDataset
 
 """
 
@@ -216,12 +216,12 @@ class HG38(SequenceDataset):
         # At this point the train loader hasn't been constructed yet
 
 # dataloader for pretraining 
-class VeggiesLoader(HG38):
-    _name_ = "veggies"
+class PlantsGenomicLoader(HG38):
+    _name_ = "plants_genomic"
     l_output = 0  # need to set this for decoder to work correctly
 
     def __init__(self, dataset_name, dest_path=None, tokenizer_name='char', d_output=None, rc_aug=False,
-                max_length=200, use_padding=True, max_length_val=None, max_length_test=None,
+                max_length=6400, use_padding=True, max_length_val=None, max_length_test=None,
                 padding_side='left', return_mask=False, val_ratio=0.0005, val_split_seed=2357, add_eos=False, 
                 detokenize=False, val_only=False, batch_size=32, batch_size_eval=None, num_workers=1,
                 shuffle=True, pin_memory=False, drop_last=False, fault_tolerant=False, ddp=False,
@@ -283,7 +283,7 @@ class VeggiesLoader(HG38):
         
         # Create all splits: torch datasets (only train/test in this benchmark)
         self.dataset_train, self.dataset_val = [
-            VeggiesDataset(csv_file=self.csv_file,
+            PlantsGenomicDataset(csv_file=self.csv_file,
                           transform=None,
                           max_sequence_length=self.max_length,
                           cols=self.cols,
@@ -297,8 +297,8 @@ class VeggiesLoader(HG38):
         return self._data_loader(self.dataset_val, batch_size=self.batch_size_eval)
 
 # dataloader for amps
-class AMPSLoader(HG38):
-    _name_ = "amps"
+class MethylLoader(HG38):
+    _name_ = "methyl"
     l_output = 0  # need to set this for decoder to work correctly
 
     def __init__(self, dataset_name, dest_path=None, tokenizer_name='char', d_output=None, rc_aug=False,
@@ -363,7 +363,7 @@ class AMPSLoader(HG38):
         
         # Create all splits: torch datasets (only train/test in this benchmark)
         self.dataset_train, self.dataset_val = [
-            AMPSDataset(csv_file=self.csv_file,
+            MethylDataset(csv_file=self.csv_file,
                         transform=None,
                         max_sequence_length=self.max_length,
                         cols=self.cols,
