@@ -33,6 +33,9 @@ task:
   loss: cross_entropy
   metrics:
     - accuracy
+    - precision
+    - recall
+    - f1_binary
   torchmetrics: null
 
 trainer:

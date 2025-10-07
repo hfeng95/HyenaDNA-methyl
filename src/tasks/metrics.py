@@ -198,6 +198,25 @@ def accuracy(logits, y):
     y = y.view(-1)
     return torch.eq(preds, y).float().mean()
 
+def precision(logits,y):
+    logits = logits.view(-1,logits.shape[-1])
+    preds = torch.argmax(logits,dim=-1)
+    if y.numel() > logits.shape[0]:
+        y = y.argmax(dim=-1)
+    y = y.view(-1)
+    tp = ((preds == 1) & (y == 1)).sum().float()
+    fp = ((preds == 1) & (y == 0)).sum().float()
+    return tp / (tp + fp + 1e-8)
+
+def recall(logits,y):
+    logits = logits.view(-1, logits.shape[-1])
+    preds = torch.argmax(logits, dim=-1)
+    if y.numel() > logits.shape[0]:
+        y = y.argmax(dim=-1)
+    y = y.view(-1)
+    tp = ((preds == 1) & (y == 1)).sum().float()
+    fn = ((preds == 0) & (y == 1)).sum().float()
+    return tp / (tp + fn + 1e-8)
 
 def accuracy_ignore_index(logits, y, ignore_index=-100):
     num_classes = logits.shape[-1]
@@ -317,9 +336,9 @@ output_metric_fns = {
     "cross_entropy": cross_entropy,
     "padded_cross_entropy": padded_cross_entropy,
     "binary_accuracy": binary_accuracy,
-    "precision": MulticlassPrecision,
+    "precision": precision,
     "precision_per_class": PrecisionPerClass,
-    "recall": MulticlassRecall,
+    "recall": recall,
     "recall_per_class": RecallPerClass,
     "accuracy": accuracy,
     "accuracy_per_class": AccuracyPerClass,

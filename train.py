@@ -572,6 +572,30 @@ class SequenceLightningModule(pl.LightningModule):
         self.test_loader_names = ["final/" + name for name in test_loader_names]
         return test_loaders
 
+    def predict_dataloader(self):
+        self.dataset.test_dataloader(**self.hparams.loader)
+
+    def predict_batch(self,dataloader=None,return_probs=True):
+        self._initialize_state()
+        self.eval()
+        device = next(self.parameters()).device
+        preds, probs, labels = [], [], []
+
+        dataloader = self.dataset.test_dataloader()
+
+        with torch.no_grad():
+            for data,target in tqdm(dataloader,desc='Running inference'):
+                data,target = data.to(device),target.to(device)
+                logits,*_ = self.forward((data,target,{}))
+                p = torch.softmax(logits,dim=-1)
+
+                preds.extend(torch.argmax(p,dim=-1).cpu().numpy())
+                if return_probs:
+                    probs.extend(p[:,1].cpu().numpy())
+                labels.extend(target.cpu().numpy())
+
+        results = {'preds':np.array(preds),'probs':np.array(probs),"labels": np.array(labels)[:,0]}
+        return results
 
 ### pytorch-lightning utils and entrypoint ###
 

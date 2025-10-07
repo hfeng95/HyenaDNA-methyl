@@ -200,9 +200,9 @@ class MultiClass(BaseTask):
                         self.continual_metrics[name + '_' + spec] = self.continual_metrics[name + '_' + spec].to(x.device)
                         self.continual_metrics[name + '_' + spec].update(x, y)
                         output_metrics[name + '_' + spec] = self.continual_metrics[name + '_' + spec].compute()
-                elif name in ['precision', 'recall']:
-                    self.continual_metrics[name] = self.continual_metrics[name].to(x.device)
-                    output_metrics[name] = self.continual_metrics[name](x, y)
+                # elif name in ['precision', 'recall']:
+                #     self.continual_metrics[name] = self.continual_metrics[name].to(x.device)
+                #     output_metrics[name] = self.continual_metrics[name](x, y)
                 else:
                     output_metrics[name] = U.discard_kwargs(M.output_metric_fns[name])(x, y, **kwargs)
 
